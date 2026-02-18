@@ -15,7 +15,7 @@ Content-Type: application/json
     "ReleaseDate": "2026-01-02"
 }
 ###
-GET http://localhost:5041/games/123
+GET http://localhost:5041/games/1
 ###
 PUT http://localhost:5041/games/3
 Content-Type: application/json

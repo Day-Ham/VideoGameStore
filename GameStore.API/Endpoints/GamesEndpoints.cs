@@ -16,50 +16,49 @@ public static class GamesEndpoints
 
     public static void MapGamesEndpoints(this WebApplication app)
     {
-        
-app.MapGet("/", () => "Hello World!");
-app.MapGet("/games", () => games);
-app.MapGet("/games/{id}",(int id) =>
-{
-   var game = games.Find(g=>g.ID==id);
-    if (game != null)
-    {
-        return Results.Ok(game);
-    }
-    else
-    {
-        return Results.NotFound(new {Message=$"Game {id} not found "});
-    }
-}).WithName(GetGameEndpointName);
-app.MapPost("/games",(CreateGameDTO newGame) =>
-{
-    GameDTO game = new(
-     games.Count+1,
-     newGame.Title,
-     newGame.Genre,
-     newGame.Price,
-     newGame.ReleaseDate
-     );
-     games.Add(game);
-     return Results.CreatedAtRoute("GetName",new {id=game.ID},game);
-});
-app.MapPut("/games/{id}", (int id, UpdateGameDTO updateGame) =>
-{
-    var index =games.FindIndex(games=>games.ID==id);
-    games[index] = new GameDTO(
-        id,
-        updateGame.Title,
-        updateGame.Genre,
-        updateGame.Price,
-        updateGame.ReleaseDate
-        );
+        var group = app.MapGroup("/games");
+        group.MapGet("/", () => games);
+        group.MapGet("/{id}",(int id) =>
+        {
+        var game = games.Find(g=>g.ID==id);
+            if (game != null)
+            {
+                return Results.Ok(game);
+            }
+            else
+            {
+                return Results.NotFound(new {Message=$"Game {id} not found "});
+            }
+        }).WithName(GetGameEndpointName);
+        group.MapPost("/",(CreateGameDTO newGame) =>
+        {
+            GameDTO game = new(
+            games.Count+1,
+            newGame.Title,
+            newGame.Genre,
+            newGame.Price,
+            newGame.ReleaseDate
+            );
+            games.Add(game);
+            return Results.Created($"/games/{game.ID}", game);
+        });
+        group.MapPut("/{id}", (int id, UpdateGameDTO updateGame) =>
+        {
+            var index =games.FindIndex(games=>games.ID==id);
+            games[index] = new GameDTO(
+                id,
+                updateGame.Title,
+                updateGame.Genre,
+                updateGame.Price,
+                updateGame.ReleaseDate
+                );
 
-        return Results.NoContent();
-});
-
-app.MapDelete("/games/{id}",(int id) =>
-{
-    games.RemoveAll(game=>game.ID==id);
-});
+                return Results.NoContent();
+        });
+        group.MapDelete("/{id}",(int id) =>
+        {
+            games.RemoveAll(game=>game.ID==id);
+        });
+    
     }
 }
