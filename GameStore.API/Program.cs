@@ -29,16 +29,23 @@ app.MapPost("/games",(CreateGameDTO newGame) =>
      games.Add(game);
      return Results.CreatedAtRoute("GetName",new {id=game.ID},game);
 });
-app.Map("/games{id}", (int id, UpdateGameDTO updateGame) =>
+app.MapPut("/games/{id}", (int id, UpdateGameDTO updateGame) =>
 {
     var index =games.FindIndex(games=>games.ID==id);
     games[index] = new GameDTO(
-        index,
+        id,
         updateGame.Title,
         updateGame.Genre,
         updateGame.Price,
         updateGame.ReleaseDate
         );
+
+        return Results.NoContent();
+});
+
+app.MapDelete("/games/{id}",(int id) =>
+{
+    games.RemoveAll(game=>game.ID==id);
 });
 
 

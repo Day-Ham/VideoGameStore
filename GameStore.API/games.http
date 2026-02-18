@@ -1,5 +1,29 @@
 GET http://localhost:5041
 
+
+###
+GET http://localhost:5041/games
 ###
 
 POST http://localhost:5041/games
+Content-Type: application/json
+
+{
+    "Title": "Looks About Right",
+    "Genre": "Simulator",
+    "Price": 2.99,
+    "ReleaseDate": "2026-01-02"
+}
+###
+GET http://localhost:5041/games/3
+###
+PUT http://localhost:5041/games/3
+Content-Type: application/json
+
+{
+    "ID": 3,
+    "Title": "Looks About Right",
+    "Genre": "Simulator",
+    "Price": 2.99,
+    "ReleaseDate": "2026-01-02"
+}
